@@ -437,7 +437,7 @@ std::vector<uint8_t> goBILDA::Pinpoint::getData(Register reg, uint8_t count)
     i2c.endTransmission(true);
 
     std::vector<uint8_t> vec;
-    uint8_t bytes_to_request = count + hasUpdatedFirmware ? 1 : 0;
+    uint8_t bytes_to_request = count + (hasUpdatedFirmware ? 1 : 0);
     uint8_t bytes_to_read = i2c.requestFrom(i2c_address, bytes_to_request, static_cast<uint8_t>(true));
     if(bytes_to_read == 0){
         _lastError = PinpointError::I2C_Error;

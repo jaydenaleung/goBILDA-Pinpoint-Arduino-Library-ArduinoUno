@@ -13,6 +13,11 @@ namespace goBILDA{
         goBILDA_4_BAR_POD
     };
 
+    enum class EncoderDirection{
+        Forward,
+        Backward
+    };
+
     enum class PinpointRegisters : uint8_t{
         DeviceID      = 1,
         DeviceVersion = 2,
@@ -143,7 +148,7 @@ namespace goBILDA{
         void recalibrateIMU(void) const;
         void resetPositionAndIMU(void) const;
         void setOffsets(float x, float y);
-        void setEncoderDirections(bool xForward, bool yForward);
+        void setEncoderDirections(EncoderDirection xForward, EncoderDirection yForward);
         void setEncoderResolution(EncoderResolution resolution);
         void setEncoderResolution(float ticks_per_mm);
         void setYawScalar(float yawScalar);

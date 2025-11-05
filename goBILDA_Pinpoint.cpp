@@ -358,7 +358,7 @@ void goBILDA::Pinpoint::setOffsets(float x, float y)
     writeData(Register::Y_POD_OFFSET, vec);
 }
 
-void goBILDA::Pinpoint::setEncoderDirections(bool xForward, bool yForward)
+void goBILDA::Pinpoint::setEncoderDirections(EncoderDirection x, EncoderDirection y)
 {
     constexpr uint32_t X_FORWARD_BM  = 1 << 5;
     constexpr uint32_t X_BACKWARD_BM = 1 << 4;
@@ -366,8 +366,8 @@ void goBILDA::Pinpoint::setEncoderDirections(bool xForward, bool yForward)
     constexpr uint32_t Y_BACKWARD_BM = 1 << 2;
 
     uint32_t control_reg_val = 0;
-    control_reg_val |= (xForward ? X_FORWARD_BM : X_BACKWARD_BM);
-    control_reg_val |= (yForward ? Y_FORWARD_BM : Y_BACKWARD_BM);
+    control_reg_val |= (x == EncoderDirection::Forward ? X_FORWARD_BM : X_BACKWARD_BM);
+    control_reg_val |= (y == EncoderDirection::Forward ? Y_FORWARD_BM : Y_BACKWARD_BM);
 
     std::vector<uint8_t> vec;
     loadVectorWithUint(vec, control_reg_val);

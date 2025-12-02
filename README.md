@@ -62,13 +62,12 @@ goBILDA::Pinpoint pinpoint;
 
 void setup(){
 	pinpoint.begin();
-
-  pinpoint.setPosX(0.0);                                                                                  // Set the current x-position        (millimeters)
-  pinpoint.setPosY(0.0);                                                                                  // Set the current y-position        (millimeters)
-  pinpoint.setHeading(0.0);                                                                               // Set the current heading           (radians)
-  pinpoint.setOffsets(0.0, 0.0);                                                                          // X/Y offset from the robots center (millimeters)
-  pinpoint.setEncoderResolution(goBILDA::EncoderResolution::goBILDA_4_BAR_POD);                           // Set the encoder resolution        (millimeters per tick)
-  pinpoint.setEncoderDirections(goBILDA::EncoderDirection::Forward, goBILDA::EncoderDirection::Forward);  // Set X and Y encoder directions
+	pinpoint.setPosX(0.0);                                                                                  // Set the current x-position        (millimeters)
+  	pinpoint.setPosY(0.0);                                                                                  // Set the current y-position        (millimeters)
+  	pinpoint.setHeading(0.0);                                                                               // Set the current heading           (radians)
+  	pinpoint.setOffsets(0.0, 0.0);                                                                          // X/Y offset from the robots center (millimeters)
+  	pinpoint.setEncoderResolution(goBILDA::EncoderResolution::goBILDA_4_BAR_POD);                           // Set the encoder resolution        (millimeters per tick)
+  	pinpoint.setEncoderDirections(goBILDA::EncoderDirection::Forward, goBILDA::EncoderDirection::Forward);  // Set X and Y encoder directions
 }
 ```
 

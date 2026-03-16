@@ -3,7 +3,7 @@
 </div>
 
 <div align="center">
-	<h1>goBILDA Pinpoint Odometry Computer</h1>
+	<h1>goBILDA Pinpoint Odometry Computer - Arduino Uno Version</h1>
 </div>
 
 <p>

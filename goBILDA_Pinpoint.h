@@ -1,5 +1,8 @@
 #include <Wire.h>
-#include <vector>
+#include <stdint.h>
+
+#ifndef GOBILDA_PINPOINT_H
+#define GOBILDA_PINPOINT_H
 
 namespace goBILDA{
     enum class PinpointError {
@@ -55,16 +58,11 @@ namespace goBILDA{
         static PinpointStatus GetStatus(uint32_t device_status)
         {
             PinpointStatus status;
-            if(device_status & 0b000001)
-                status.ready = false;
-            if(device_status & 0b000010)
-                status.ready = false;
-            if(device_status & 0b000100)
-                status.calibrating = true;
-            if(device_status & 0b001000)
-                status.xPodDetected = true;
-            if(device_status & 0b010000)
-                status.yPodDetected = true;
+            if(device_status & 0b000001) status.ready = false;
+            if(device_status & 0b000010) status.ready = false;
+            if(device_status & 0b000100) status.calibrating = true;
+            if(device_status & 0b001000) status.xPodDetected = true;
+            if(device_status & 0b010000) status.yPodDetected = true;
 
             return status;
         }
@@ -109,7 +107,6 @@ namespace goBILDA{
         void begin(TwoWire &wire = Wire);
         PinpointError getLastError() const;
 
-
         PinpointStatus getDeviceStatus(bool useBulkReadValue = false);
         uint32_t getDeviceID(bool useBulkReadValue = false);
         uint32_t getDeviceVersion(bool useBulkReadValue = false);
@@ -122,8 +119,8 @@ namespace goBILDA{
         float getFrequency(bool useBulkReadValue = false);
         float getPositionXInMM(bool useBulkReadValue = false);
         float getPositionYInMM(bool useBulkReadValue = false);
-        float getNormalizedHeading(bool useBulkReadValue = false); // AngleUnit
-        float getUnNormalizedHeading(bool useBulkReadValue = false);     // UnnormalizedAngleUnit unnormalizedAngleUnit
+        float getNormalizedHeading(bool useBulkReadValue = false);
+        float getUnNormalizedHeading(bool useBulkReadValue = false);
         float getVelocityX(bool useBulkReadValue = false);
         float getVelocityY(bool useBulkReadValue = false);
         float getVelocityHeading(bool useBulkReadValue = false);
@@ -143,7 +140,7 @@ namespace goBILDA{
 
         BulkReadData bulkRead(void);
         void resetBulkRead(void);
-        void setBulkReadScope(std::vector<PinpointRegisters> registers);    // Return if !hasNewFirmware
+        void setBulkReadScope(const PinpointRegisters* registers, uint8_t count);
 
         void recalibrateIMU(void) const;
         void resetPositionAndIMU(void) const;
@@ -156,7 +153,6 @@ namespace goBILDA{
         void setPosX(float positionInMM);
         void setPosY(float positionInMM);
         void setHeading(float angleInRadians);
-
 
     private:
         static constexpr uint8_t PINPOINT_DEVICE_ID = 2;
@@ -193,7 +189,7 @@ namespace goBILDA{
             SET_BULK_READ   = 25
         };
 
-        std::vector<PinpointRegisters> bulkReadScope = {
+        PinpointRegisters bulkReadScope[24] = {
             PinpointRegisters::DeviceStatus ,
             PinpointRegisters::LoopTime     ,
             PinpointRegisters::EncoderValueX,
@@ -205,6 +201,7 @@ namespace goBILDA{
             PinpointRegisters::VelocityY    ,
             PinpointRegisters::VelocityH
         };
+        uint8_t bulkReadScopeCount = 10;
 
         PinpointError _lastError = PinpointError::None;
         uint32_t _lastDeviceId   = 0;
@@ -230,17 +227,18 @@ namespace goBILDA{
         float _lastQuaternionY = 0.0;
         float _lastQuaternionZ = 0.0;
 
-        std::vector<uint8_t> getData(Register reg, uint8_t count);
-        void writeData(Register reg, std::vector<uint8_t> &data) const;
-        void saveData(PinpointRegisters reg, std::vector<uint8_t> &data, BulkReadData &bulk_data);
+        void getData(Register reg, uint8_t count, uint8_t* outBuffer);
+        void writeData(Register reg, const uint8_t* data, uint8_t length) const;
+        void saveData(PinpointRegisters reg, const uint8_t* data, BulkReadData &bulk_data);
 
-        void loadVectorWithFloat(std::vector<uint8_t> &vec, float value) const;
-        void loadVectorWithUint(std::vector<uint8_t> &vec, uint32_t value) const;
+        void loadBufferWithFloat(uint8_t* buffer, float value) const;
+        void loadBufferWithUint(uint8_t* buffer, uint32_t value) const;
 
-        int32_t convertVectorToint(std::vector<uint8_t> &vec) const;
-        uint32_t convertVectorToUint(std::vector<uint8_t> &vec) const;
-        float convertVectorToFloat(std::vector<uint8_t> &vec) const;
+        int32_t convertBufferToint(const uint8_t* buffer) const;
+        uint32_t convertBufferToUint(const uint8_t* buffer) const;
+        float convertBufferToFloat(const uint8_t* buffer) const;
 
         bool firmwareIsAbleToRead(Register reg) const;
   };
 }
+#endif

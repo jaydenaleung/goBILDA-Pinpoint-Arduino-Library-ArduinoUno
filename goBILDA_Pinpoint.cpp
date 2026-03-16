@@ -15,16 +15,14 @@ void goBILDA::Pinpoint::begin(TwoWire &wire)
     }
 }
 
-goBILDA::PinpointError goBILDA::Pinpoint::getLastError() const
-{
-    return _lastError;
-}
+goBILDA::PinpointError goBILDA::Pinpoint::getLastError() const { return _lastError; }
 
 uint32_t goBILDA::Pinpoint::getDeviceID(bool useBulkReadValue)
 {
     if(!useBulkReadValue){
-        std::vector<uint8_t> vec = getData(Register::DEVICE_ID, sizeof(uint32_t));
-        _lastDeviceId = convertVectorToUint(vec);
+        uint8_t buf[4];
+        getData(Register::DEVICE_ID, 4, buf);
+        _lastDeviceId = convertBufferToUint(buf);
     }
     return _lastDeviceId;
 }
@@ -32,8 +30,9 @@ uint32_t goBILDA::Pinpoint::getDeviceID(bool useBulkReadValue)
 uint32_t goBILDA::Pinpoint::getDeviceVersion(bool useBulkReadValue)
 {
     if(!useBulkReadValue){
-        std::vector<uint8_t> vec = getData(Register::DEVICE_VERSION, sizeof(uint32_t));
-        _lastDeviceVersion = convertVectorToUint(vec);
+        uint8_t buf[4];
+        getData(Register::DEVICE_VERSION, 4, buf);
+        _lastDeviceVersion = convertBufferToUint(buf);
     }
     return _lastDeviceVersion;
 }
@@ -41,8 +40,9 @@ uint32_t goBILDA::Pinpoint::getDeviceVersion(bool useBulkReadValue)
 float goBILDA::Pinpoint::getYawScalar(bool useBulkReadValue)
 {
     if(!useBulkReadValue){
-        std::vector<uint8_t> vec = getData(Register::YAW_SCALAR, sizeof(float));
-        _lastYawScalar = convertVectorToFloat(vec);
+        uint8_t buf[4];
+        getData(Register::YAW_SCALAR, 4, buf);
+        _lastYawScalar = convertBufferToFloat(buf);
     }
     return _lastYawScalar;
 }
@@ -50,8 +50,9 @@ float goBILDA::Pinpoint::getYawScalar(bool useBulkReadValue)
 goBILDA::PinpointStatus goBILDA::Pinpoint::getDeviceStatus(bool useBulkReadValue)
 {
     if(!useBulkReadValue){
-        std::vector<uint8_t> vec = getData(Register::DEVICE_STATUS, sizeof(uint32_t));
-        _lastDeviceStatus = convertVectorToUint(vec);
+        uint8_t buf[4];
+        getData(Register::DEVICE_STATUS, 4, buf);
+        _lastDeviceStatus = convertBufferToUint(buf);
     }
     return PinpointStatus::GetStatus(_lastDeviceStatus);
 }
@@ -59,26 +60,26 @@ goBILDA::PinpointStatus goBILDA::Pinpoint::getDeviceStatus(bool useBulkReadValue
 uint32_t goBILDA::Pinpoint::getLoopTime(bool useBulkReadValue)
 {
     if(!useBulkReadValue){
-        std::vector<uint8_t> vec = getData(Register::LOOP_TIME, sizeof(uint32_t));
-        _lastLoopTime = convertVectorToUint(vec);
+        uint8_t buf[4];
+        getData(Register::LOOP_TIME, 4, buf);
+        _lastLoopTime = convertBufferToUint(buf);
     }
-
     return _lastLoopTime;
 }
 
 float goBILDA::Pinpoint::getFrequency(bool useBulkReadValue)
 {
     uint32_t loopTime = getLoopTime(useBulkReadValue);
-    if(loopTime == 0)
-        return 0;
+    if(loopTime == 0) return 0;
     return 1000000.0 / loopTime;
 }
 
 int32_t goBILDA::Pinpoint::getEncoderX(bool useBulkReadValue)
 {
     if(!useBulkReadValue){
-        std::vector<uint8_t> vec = getData(Register::X_ENCODER_VALUE, sizeof(int32_t));
-        _lastEncoderX = convertVectorToint(vec);
+        uint8_t buf[4];
+        getData(Register::X_ENCODER_VALUE, 4, buf);
+        _lastEncoderX = convertBufferToint(buf);
     }
     return _lastEncoderX;
 }
@@ -86,8 +87,9 @@ int32_t goBILDA::Pinpoint::getEncoderX(bool useBulkReadValue)
 int32_t goBILDA::Pinpoint::getEncoderY(bool useBulkReadValue)
 {
     if(!useBulkReadValue){
-        std::vector<uint8_t> vec = getData(Register::Y_ENCODER_VALUE, sizeof(int32_t));
-        _lastEncoderY = convertVectorToint(vec);
+        uint8_t buf[4];
+        getData(Register::Y_ENCODER_VALUE, 4, buf);
+        _lastEncoderY = convertBufferToint(buf);
     }
     return _lastEncoderY;
 }
@@ -95,8 +97,9 @@ int32_t goBILDA::Pinpoint::getEncoderY(bool useBulkReadValue)
 float goBILDA::Pinpoint::getPositionXInMM(bool useBulkReadValue)
 {
     if(!useBulkReadValue){
-        std::vector<uint8_t> vec = getData(Register::X_POSITION, sizeof(float));
-        _lastPositionX = convertVectorToFloat(vec);
+        uint8_t buf[4];
+        getData(Register::X_POSITION, 4, buf);
+        _lastPositionX = convertBufferToFloat(buf);
     }
     return _lastPositionX;
 }
@@ -104,37 +107,39 @@ float goBILDA::Pinpoint::getPositionXInMM(bool useBulkReadValue)
 float goBILDA::Pinpoint::getPositionYInMM(bool useBulkReadValue)
 {
     if(!useBulkReadValue){
-        std::vector<uint8_t> vec = getData(Register::Y_POSITION, sizeof(float));
-        _lastPositionY = convertVectorToFloat(vec);
+        uint8_t buf[4];
+        getData(Register::Y_POSITION, 4, buf);
+        _lastPositionY = convertBufferToFloat(buf);
     }
     return _lastPositionY;
 }
 
-float goBILDA::Pinpoint::getNormalizedHeading(bool useBulkReadValue) // AngleUnit
+float goBILDA::Pinpoint::getNormalizedHeading(bool useBulkReadValue)
 {
     if(!useBulkReadValue){
-        std::vector<uint8_t> vec = getData(Register::H_ORIENTATION, sizeof(float));
-        _lastHeading = convertVectorToFloat(vec);
+        uint8_t buf[4];
+        getData(Register::H_ORIENTATION, 4, buf);
+        _lastHeading = convertBufferToFloat(buf);
     }
-
     return fmod(fabs(_lastHeading * RAD_TO_DEG), 360.0f) - 180.0;
 }
 
-float goBILDA::Pinpoint::getUnNormalizedHeading(bool useBulkReadValue)     // UnnormalizedAngleUnit unnormalizedAngleUnit
+float goBILDA::Pinpoint::getUnNormalizedHeading(bool useBulkReadValue)
 {
     if(!useBulkReadValue){
-        std::vector<uint8_t> vec = getData(Register::H_ORIENTATION, sizeof(float));
-        _lastHeading = convertVectorToFloat(vec);
+        uint8_t buf[4];
+        getData(Register::H_ORIENTATION, 4, buf);
+        _lastHeading = convertBufferToFloat(buf);
     }
-    
     return _lastHeading * RAD_TO_DEG;
 }
 
 float goBILDA::Pinpoint::getVelocityX(bool useBulkReadValue)
 {
     if(!useBulkReadValue){
-        std::vector<uint8_t> vec = getData(Register::X_VELOCITY, sizeof(float));
-        _lastVelocityX = convertVectorToFloat(vec);
+        uint8_t buf[4];
+        getData(Register::X_VELOCITY, 4, buf);
+        _lastVelocityX = convertBufferToFloat(buf);
     }
     return _lastVelocityX;
 }
@@ -142,8 +147,9 @@ float goBILDA::Pinpoint::getVelocityX(bool useBulkReadValue)
 float goBILDA::Pinpoint::getVelocityY(bool useBulkReadValue)
 {
     if(!useBulkReadValue){
-        std::vector<uint8_t> vec = getData(Register::Y_VELOCITY, sizeof(float));
-        _lastVelocityY = convertVectorToFloat(vec);
+        uint8_t buf[4];
+        getData(Register::Y_VELOCITY, 4, buf);
+        _lastVelocityY = convertBufferToFloat(buf);
     }
     return _lastVelocityY;
 }
@@ -151,8 +157,9 @@ float goBILDA::Pinpoint::getVelocityY(bool useBulkReadValue)
 float goBILDA::Pinpoint::getVelocityHeading(bool useBulkReadValue)
 {
     if(!useBulkReadValue){
-        std::vector<uint8_t> vec = getData(Register::H_VELOCITY, sizeof(float));
-        _lastVelocityH = convertVectorToFloat(vec);
+        uint8_t buf[4];
+        getData(Register::H_VELOCITY, 4, buf);
+        _lastVelocityH = convertBufferToFloat(buf);
     }
     return _lastVelocityH;
 }
@@ -160,8 +167,9 @@ float goBILDA::Pinpoint::getVelocityHeading(bool useBulkReadValue)
 float goBILDA::Pinpoint::getMmPerTick(bool useBulkReadValue)
 {
     if(!useBulkReadValue){
-        std::vector<uint8_t> vec = getData(Register::MM_PER_TICK, sizeof(float));
-        _lastMmPerTick = convertVectorToFloat(vec);
+        uint8_t buf[4];
+        getData(Register::MM_PER_TICK, 4, buf);
+        _lastMmPerTick = convertBufferToFloat(buf);
     }
     return _lastMmPerTick;
 }
@@ -169,8 +177,9 @@ float goBILDA::Pinpoint::getMmPerTick(bool useBulkReadValue)
 float goBILDA::Pinpoint::getOffsetX(bool useBulkReadValue)
 {
     if(!useBulkReadValue){
-        std::vector<uint8_t> vec = getData(Register::X_POD_OFFSET, sizeof(float));
-        _lastOffsetX = convertVectorToFloat(vec);
+        uint8_t buf[4];
+        getData(Register::X_POD_OFFSET, 4, buf);
+        _lastOffsetX = convertBufferToFloat(buf);
     }
     return _lastOffsetX;
 }
@@ -178,116 +187,109 @@ float goBILDA::Pinpoint::getOffsetX(bool useBulkReadValue)
 float goBILDA::Pinpoint::getOffsetY(bool useBulkReadValue)
 {
     if(!useBulkReadValue){
-        std::vector<uint8_t> vec = getData(Register::Y_POD_OFFSET, sizeof(float));
-        _lastOffsetY = convertVectorToFloat(vec);
+        uint8_t buf[4];
+        getData(Register::Y_POD_OFFSET, 4, buf);
+        _lastOffsetY = convertBufferToFloat(buf);
     }
     return _lastOffsetY;
 }
 
 float goBILDA::Pinpoint::getPitch(bool useBulkReadValue)
 {
-    if(!firmwareIsAbleToRead(Register::PITCH))
-        return 0.0;
-
+    if(!firmwareIsAbleToRead(Register::PITCH)) return 0.0;
     if(!useBulkReadValue){
-        std::vector<uint8_t> vec = getData(Register::PITCH, sizeof(float));
-        _lastPitch = convertVectorToFloat(vec);
+        uint8_t buf[4];
+        getData(Register::PITCH, 4, buf);
+        _lastPitch = convertBufferToFloat(buf);
     }
     return _lastPitch;
 }
 
 float goBILDA::Pinpoint::getRoll(bool useBulkReadValue)
 {
-    if(!firmwareIsAbleToRead(Register::ROLL))
-        return 0.0;
-
+    if(!firmwareIsAbleToRead(Register::ROLL)) return 0.0;
     if(!useBulkReadValue){
-        std::vector<uint8_t> vec = getData(Register::ROLL, sizeof(float));
-        _lastRoll = convertVectorToFloat(vec);
+        uint8_t buf[4];
+        getData(Register::ROLL, 4, buf);
+        _lastRoll = convertBufferToFloat(buf);
     }
     return _lastRoll;
 }
 
 float goBILDA::Pinpoint::getQuaternionW(bool useBulkReadValue)
 {
-    if(!firmwareIsAbleToRead(Register::QUATERNION_W))
-        return 0.0;
-
+    if(!firmwareIsAbleToRead(Register::QUATERNION_W)) return 0.0;
     if(!useBulkReadValue){
-        std::vector<uint8_t> vec = getData(Register::QUATERNION_W, sizeof(float));
-        _lastQuaternionW = convertVectorToFloat(vec);
+        uint8_t buf[4];
+        getData(Register::QUATERNION_W, 4, buf);
+        _lastQuaternionW = convertBufferToFloat(buf);
     }
     return _lastQuaternionW;
 }
 
 float goBILDA::Pinpoint::getQuaternionX(bool useBulkReadValue)
 {
-    if(!firmwareIsAbleToRead(Register::QUATERNION_X))
-        return 0.0;
-
+    if(!firmwareIsAbleToRead(Register::QUATERNION_X)) return 0.0;
     if(!useBulkReadValue){
-        std::vector<uint8_t> vec = getData(Register::QUATERNION_X, sizeof(float));
-        _lastQuaternionX = convertVectorToFloat(vec);
+        uint8_t buf[4];
+        getData(Register::QUATERNION_X, 4, buf);
+        _lastQuaternionX = convertBufferToFloat(buf);
     }
     return _lastQuaternionX;
 }
 
 float goBILDA::Pinpoint::getQuaternionY(bool useBulkReadValue)
 {
-    if(!firmwareIsAbleToRead(Register::QUATERNION_Y))
-        return 0.0;
-
+    if(!firmwareIsAbleToRead(Register::QUATERNION_Y)) return 0.0;
     if(!useBulkReadValue){
-        std::vector<uint8_t> vec = getData(Register::QUATERNION_Y, sizeof(float));
-        _lastQuaternionY = convertVectorToFloat(vec);
+        uint8_t buf[4];
+        getData(Register::QUATERNION_Y, 4, buf);
+        _lastQuaternionY = convertBufferToFloat(buf);
     }
     return _lastQuaternionY;
 }
 
 float goBILDA::Pinpoint::getQuaternionZ(bool useBulkReadValue)
 {
-    if(!firmwareIsAbleToRead(Register::QUATERNION_Z))
-        return 0.0;
-
+    if(!firmwareIsAbleToRead(Register::QUATERNION_Z)) return 0.0;
     if(!useBulkReadValue){
-        std::vector<uint8_t> vec = getData(Register::QUATERNION_Z, sizeof(float));
-        _lastQuaternionZ = convertVectorToFloat(vec);
+        uint8_t buf[4];
+        getData(Register::QUATERNION_Z, 4, buf);
+        _lastQuaternionZ = convertBufferToFloat(buf);
     }
     return _lastQuaternionZ;
 }
 
-goBILDA::Pose2D goBILDA::Pinpoint::getPosition(bool useBulkReadValue)     // Pose2D
+goBILDA::Pose2D goBILDA::Pinpoint::getPosition(bool useBulkReadValue)
 {
     float posX = getPositionXInMM(useBulkReadValue);
     float posY = getPositionYInMM(useBulkReadValue);
     float head = getUnNormalizedHeading(useBulkReadValue);
-
     return goBILDA::Pose2D{posX, posY, head};
 }
 
-goBILDA::Quaternion goBILDA::Pinpoint::getQuaternion(bool useBulkReadValue)   // Quaternion
+goBILDA::Quaternion goBILDA::Pinpoint::getQuaternion(bool useBulkReadValue)
 {
     float w = getQuaternionW(useBulkReadValue);
     float x = getQuaternionX(useBulkReadValue);
     float y = getQuaternionY(useBulkReadValue);
     float z = getQuaternionZ(useBulkReadValue);
-
     return goBILDA::Quaternion{w, x, y, z};
 }
 
 goBILDA::BulkReadData goBILDA::Pinpoint::bulkRead(void)
 {
-    std::vector<uint8_t> data = getData(Register::BULK_READ, sizeof(uint32_t) * bulkReadScope.size());
+    uint8_t data[96]; // Max 24 registers * 4 bytes = 96
+    getData(Register::BULK_READ, sizeof(uint32_t) * bulkReadScopeCount, data);
+    
     BulkReadData brData;
     brData.Error = getLastError();
 
     if(brData.Error != PinpointError::None)
         return brData;
 
-    for(int i = 0; i < bulkReadScope.size(); i++){
-        std::vector<uint8_t>::const_iterator bytes_start = data.begin() + (i * 4);
-        std::vector<uint8_t> bytes(bytes_start, bytes_start + 4);
-        saveData(bulkReadScope[i], bytes, brData);
+    for(int i = 0; i < bulkReadScopeCount; i++){
+        saveData(bulkReadScope[i], &data[i * 4], brData);
     }
 
     return brData;
@@ -295,67 +297,66 @@ goBILDA::BulkReadData goBILDA::Pinpoint::bulkRead(void)
 
 void goBILDA::Pinpoint::resetBulkRead(void)
 {
-    std::vector<uint8_t> newBulkReadScope = {static_cast<uint8_t>(Register::BULK_READ)};
-    writeData(Register::SET_BULK_READ, newBulkReadScope);
-    bulkReadScope = {
-        PinpointRegisters::DeviceStatus,
-        PinpointRegisters::LoopTime,
-        PinpointRegisters::EncoderValueX,
-        PinpointRegisters::EncoderValueY,
-        PinpointRegisters::PositionX,
-        PinpointRegisters::PositionY,
-        PinpointRegisters::Heading,
-        PinpointRegisters::VelocityX,
-        PinpointRegisters::VelocityY,
-        PinpointRegisters::VelocityH
-    };
+    uint8_t newBulkReadScope[1] = {static_cast<uint8_t>(Register::BULK_READ)};
+    writeData(Register::SET_BULK_READ, newBulkReadScope, 1);
+    
+    bulkReadScope[0] = PinpointRegisters::DeviceStatus;
+    bulkReadScope[1] = PinpointRegisters::LoopTime;
+    bulkReadScope[2] = PinpointRegisters::EncoderValueX;
+    bulkReadScope[3] = PinpointRegisters::EncoderValueY;
+    bulkReadScope[4] = PinpointRegisters::PositionX;
+    bulkReadScope[5] = PinpointRegisters::PositionY;
+    bulkReadScope[6] = PinpointRegisters::Heading;
+    bulkReadScope[7] = PinpointRegisters::VelocityX;
+    bulkReadScope[8] = PinpointRegisters::VelocityY;
+    bulkReadScope[9] = PinpointRegisters::VelocityH;
+    bulkReadScopeCount = 10;
 }
 
-void goBILDA::Pinpoint::setBulkReadScope(std::vector<PinpointRegisters> registers)
+void goBILDA::Pinpoint::setBulkReadScope(const PinpointRegisters* registers, uint8_t count)
 {
-    if(!hasUpdatedFirmware)
-        return;
+    if(!hasUpdatedFirmware) return;
     
-    uint32_t reg_bm = 0;    // Remove all duplicates
-    bulkReadScope.clear();
-    for(int i = 0; i < registers.size(); i++){
+    uint32_t reg_bm = 0;
+    bulkReadScopeCount = 0;
+    for(int i = 0; i < count; i++){
         uint32_t curr_reg = 1 << static_cast<uint32_t>(registers[i]);
         if(!(reg_bm & curr_reg)){
             reg_bm |= curr_reg;
-            bulkReadScope.push_back(registers[i]);
+            bulkReadScope[bulkReadScopeCount++] = registers[i];
         }
     }
 
-    std::vector<uint8_t> vec;
-    for(auto reg : bulkReadScope)
-        vec.push_back(static_cast<uint8_t>(reg));
-    writeData(Register::SET_BULK_READ, vec);
+    uint8_t buf[24];
+    for(uint8_t i = 0; i < bulkReadScopeCount; i++)
+        buf[i] = static_cast<uint8_t>(bulkReadScope[i]);
+        
+    writeData(Register::SET_BULK_READ, buf, bulkReadScopeCount);
 }
 
 void goBILDA::Pinpoint::recalibrateIMU(void) const
 {
     uint32_t bit_mask = 1 << 0;
-    std::vector<uint8_t> vec;
-    loadVectorWithUint(vec, bit_mask);
-    writeData(Register::DEVICE_CONTROL, vec);
+    uint8_t buf[4];
+    loadBufferWithUint(buf, bit_mask);
+    writeData(Register::DEVICE_CONTROL, buf, 4);
 }
 
 void goBILDA::Pinpoint::resetPositionAndIMU(void) const
 {
     uint32_t bit_mask = 1 << 1;
-    std::vector<uint8_t> vec;
-    loadVectorWithUint(vec, bit_mask);
-    writeData(Register::DEVICE_CONTROL, vec);
+    uint8_t buf[4];
+    loadBufferWithUint(buf, bit_mask);
+    writeData(Register::DEVICE_CONTROL, buf, 4);
 }
 
 void goBILDA::Pinpoint::setOffsets(float x, float y)
 {
-    std::vector<uint8_t> vec;
-
-    loadVectorWithFloat(vec, x);
-    writeData(Register::X_POD_OFFSET, vec);
-    loadVectorWithFloat(vec, y);
-    writeData(Register::Y_POD_OFFSET, vec);
+    uint8_t buf[4];
+    loadBufferWithFloat(buf, x);
+    writeData(Register::X_POD_OFFSET, buf, 4);
+    loadBufferWithFloat(buf, y);
+    writeData(Register::Y_POD_OFFSET, buf, 4);
 }
 
 void goBILDA::Pinpoint::setEncoderDirections(EncoderDirection x, EncoderDirection y)
@@ -369,34 +370,34 @@ void goBILDA::Pinpoint::setEncoderDirections(EncoderDirection x, EncoderDirectio
     control_reg_val |= (x == EncoderDirection::Forward ? X_FORWARD_BM : X_BACKWARD_BM);
     control_reg_val |= (y == EncoderDirection::Forward ? Y_FORWARD_BM : Y_BACKWARD_BM);
 
-    std::vector<uint8_t> vec;
-    loadVectorWithUint(vec, control_reg_val);
-    writeData(Register::DEVICE_CONTROL, vec);
+    uint8_t buf[4];
+    loadBufferWithUint(buf, control_reg_val);
+    writeData(Register::DEVICE_CONTROL, buf, 4);
 }
 
 void goBILDA::Pinpoint::setEncoderResolution(EncoderResolution resolution)
 {
-    std::vector<uint8_t> vec;
+    uint8_t buf[4];
     if(resolution == EncoderResolution::goBILDA_4_BAR_POD)
-        loadVectorWithFloat(vec, 19.89436789f);
+        loadBufferWithFloat(buf, 19.89436789f);
     else if(resolution == EncoderResolution::goBILDA_SWINGARM_POD)
-        loadVectorWithFloat(vec, 13.26291192f);
+        loadBufferWithFloat(buf, 13.26291192f);
     
-    writeData(Register::MM_PER_TICK, vec);
+    writeData(Register::MM_PER_TICK, buf, 4);
 }
 
 void goBILDA::Pinpoint::setEncoderResolution(float ticks_per_mm)
 {
-    std::vector<uint8_t> vec;
-    loadVectorWithFloat(vec, ticks_per_mm);
-    writeData(Register::MM_PER_TICK, vec);
+    uint8_t buf[4];
+    loadBufferWithFloat(buf, ticks_per_mm);
+    writeData(Register::MM_PER_TICK, buf, 4);
 }
 
 void goBILDA::Pinpoint::setYawScalar(float yawScalar)
 {
-    std::vector<uint8_t> vec;
-    loadVectorWithFloat(vec, yawScalar);
-    writeData(Register::YAW_SCALAR, vec);
+    uint8_t buf[4];
+    loadBufferWithFloat(buf, yawScalar);
+    writeData(Register::YAW_SCALAR, buf, 4);
 }
 
 void goBILDA::Pinpoint::setPosition(Pose2D pos)
@@ -408,27 +409,28 @@ void goBILDA::Pinpoint::setPosition(Pose2D pos)
 
 void goBILDA::Pinpoint::setPosX(float positionInMM)
 {
-    std::vector<uint8_t> vec;
-    loadVectorWithFloat(vec, positionInMM);
-    writeData(Register::X_POSITION, vec);
+    uint8_t buf[4];
+    loadBufferWithFloat(buf, positionInMM);
+    writeData(Register::X_POSITION, buf, 4);
 }
 
 void goBILDA::Pinpoint::setPosY(float positionInMM)
 {
-    std::vector<uint8_t> vec;
-    loadVectorWithFloat(vec, positionInMM);
-    writeData(Register::Y_POSITION, vec);
+    uint8_t buf[4];
+    loadBufferWithFloat(buf, positionInMM);
+    writeData(Register::Y_POSITION, buf, 4);
 }
 
 void goBILDA::Pinpoint::setHeading(float angleInRadians)
 {
-    std::vector<uint8_t> vec;
-    loadVectorWithFloat(vec, angleInRadians);
-    writeData(Register::H_ORIENTATION, vec);
+    uint8_t buf[4];
+    loadBufferWithFloat(buf, angleInRadians);
+    writeData(Register::H_ORIENTATION, buf, 4);
 }
 
 // #region Private Member Functions
-std::vector<uint8_t> goBILDA::Pinpoint::getData(Register reg, uint8_t count)
+
+void goBILDA::Pinpoint::getData(Register reg, uint8_t count, uint8_t* outBuffer)
 {
     _lastError = PinpointError::None;
 
@@ -436,164 +438,153 @@ std::vector<uint8_t> goBILDA::Pinpoint::getData(Register reg, uint8_t count)
     i2c.write(static_cast<uint8_t>(reg));
     i2c.endTransmission(true);
 
-    std::vector<uint8_t> vec;
     uint8_t bytes_to_request = count + (hasUpdatedFirmware ? 1 : 0);
     uint8_t bytes_to_read = i2c.requestFrom(i2c_address, bytes_to_request, static_cast<uint8_t>(true));
+    
     if(bytes_to_read == 0){
         _lastError = PinpointError::I2C_Error;
-        for(int i = 0; i < count; i++)
-            vec.push_back(0);
-        return vec;
+        for(int i = 0; i < count; i++) outBuffer[i] = 0;
+        return;
     }
 
-    for(uint8_t i = 0; i < std::min(count, bytes_to_read); i++)
-        vec.push_back(i2c.read());
+    uint8_t actual_read = (count < bytes_to_read) ? count : bytes_to_read;
+    for(uint8_t i = 0; i < actual_read; i++) outBuffer[i] = i2c.read();
     
     if(hasUpdatedFirmware && i2c.available()){
         uint8_t crc = i2c.read();
-        if(CRC8_ComputeFast(vec.data(), count) != crc){
+        if(CRC8_ComputeFast(outBuffer, count) != crc){
             _lastError = PinpointError::CRC_Failed;
-            for(auto &byte : vec)
-                byte = 0;
+            for(uint8_t i = 0; i < count; i++) outBuffer[i] = 0;
         }
     }
-    
-    return vec;
 }
 
-void goBILDA::Pinpoint::writeData(Register reg, std::vector<uint8_t> &data) const
+void goBILDA::Pinpoint::writeData(Register reg, const uint8_t* data, uint8_t length) const
 {
     i2c.beginTransmission(i2c_address);
     i2c.write(static_cast<uint8_t>(reg));
-    i2c.write(data.data(), data.size());
+    i2c.write(data, length);
     i2c.endTransmission(true);
 }
 
-void goBILDA::Pinpoint::saveData(PinpointRegisters reg, std::vector<uint8_t> &data, BulkReadData &bulk_data)
+void goBILDA::Pinpoint::saveData(PinpointRegisters reg, const uint8_t* data, BulkReadData &bulk_data)
 {
     switch(reg){
     case PinpointRegisters::EncoderValueX:
-        _lastEncoderX = bulk_data.EncoderX = convertVectorToint(data);
+        _lastEncoderX = bulk_data.EncoderX = convertBufferToint(data);
     break;
     case PinpointRegisters::EncoderValueY:
-        _lastEncoderY = bulk_data.EncoderY = convertVectorToint(data);
+        _lastEncoderY = bulk_data.EncoderY = convertBufferToint(data);
     break;
     case PinpointRegisters::DeviceVersion:
-        _lastDeviceVersion = bulk_data.DeviceVersion = convertVectorToUint(data);
+        _lastDeviceVersion = bulk_data.DeviceVersion = convertBufferToUint(data);
     break;
     case PinpointRegisters::DeviceStatus:
-        _lastDeviceStatus = convertVectorToUint(data);
+        _lastDeviceStatus = convertBufferToUint(data);
         bulk_data.DeviceStatus = PinpointStatus::GetStatus(_lastDeviceStatus);
     break;
     case PinpointRegisters::Heading:
-        _lastHeading = bulk_data.Position.heading = convertVectorToFloat(data);
+        _lastHeading = bulk_data.Position.heading = convertBufferToFloat(data);
     break;
     case PinpointRegisters::QuaternionW:
-        _lastQuaternionW = bulk_data.quaternion.w = convertVectorToFloat(data);
+        _lastQuaternionW = bulk_data.quaternion.w = convertBufferToFloat(data);
     break;
     case PinpointRegisters::QuaternionX:
-        _lastQuaternionX = bulk_data.quaternion.x = convertVectorToFloat(data);
+        _lastQuaternionX = bulk_data.quaternion.x = convertBufferToFloat(data);
     break;
     case PinpointRegisters::QuaternionY:
-        _lastQuaternionY = bulk_data.quaternion.y = convertVectorToFloat(data);
+        _lastQuaternionY = bulk_data.quaternion.y = convertBufferToFloat(data);
     break;
     case PinpointRegisters::QuaternionZ:
-        _lastQuaternionZ = bulk_data.quaternion.z = convertVectorToFloat(data);
+        _lastQuaternionZ = bulk_data.quaternion.z = convertBufferToFloat(data);
     break;
     case PinpointRegisters::PodOffsetX:
-        _lastOffsetX = bulk_data.OffsetX = convertVectorToFloat(data);
+        _lastOffsetX = bulk_data.OffsetX = convertBufferToFloat(data);
     break;
     case PinpointRegisters::PodOffsetY:
-        _lastOffsetY = bulk_data.OffsetY = convertVectorToFloat(data);
+        _lastOffsetY = bulk_data.OffsetY = convertBufferToFloat(data);
     break;
     case PinpointRegisters::MmPerTick:
-        _lastMmPerTick = bulk_data.MmPerTick = convertVectorToFloat(data);
+        _lastMmPerTick = bulk_data.MmPerTick = convertBufferToFloat(data);
     break;
     case PinpointRegisters::YawScalar:
-        _lastYawScalar = bulk_data.YawScalar = convertVectorToFloat(data);
+        _lastYawScalar = bulk_data.YawScalar = convertBufferToFloat(data);
     break;
     case PinpointRegisters::PositionX:
-        _lastPositionX = bulk_data.Position.x = convertVectorToFloat(data);
+        _lastPositionX = bulk_data.Position.x = convertBufferToFloat(data);
     break;
     case PinpointRegisters::PositionY:
-        _lastPositionY = bulk_data.Position.y = convertVectorToFloat(data);
+        _lastPositionY = bulk_data.Position.y = convertBufferToFloat(data);
     break;
     case PinpointRegisters::VelocityX:
-        _lastVelocityX = bulk_data.VelocityX = convertVectorToFloat(data);
+        _lastVelocityX = bulk_data.VelocityX = convertBufferToFloat(data);
     break;
     case PinpointRegisters::VelocityY:
-        _lastVelocityY = bulk_data.VelocityY = convertVectorToFloat(data);
+        _lastVelocityY = bulk_data.VelocityY = convertBufferToFloat(data);
     break;
     case PinpointRegisters::VelocityH:
-        _lastVelocityH = bulk_data.VelocityH = convertVectorToFloat(data);
+        _lastVelocityH = bulk_data.VelocityH = convertBufferToFloat(data);
     break;
     case PinpointRegisters::DeviceID:
-        _lastDeviceId = bulk_data.DeviceId = convertVectorToUint(data);
+        _lastDeviceId = bulk_data.DeviceId = convertBufferToUint(data);
     break;
     case PinpointRegisters::LoopTime:
-        _lastLoopTime = bulk_data.LoopTime = convertVectorToUint(data);
+        _lastLoopTime = bulk_data.LoopTime = convertBufferToUint(data);
     break;
     case PinpointRegisters::Pitch:
-        _lastPitch = bulk_data.Pitch = convertVectorToFloat(data);
+        _lastPitch = bulk_data.Pitch = convertBufferToFloat(data);
     break;
     case PinpointRegisters::Roll:
-        _lastRoll = bulk_data.Roll = convertVectorToFloat(data);
+        _lastRoll = bulk_data.Roll = convertBufferToFloat(data);
     break;
     }
 }
 
-void goBILDA::Pinpoint::loadVectorWithFloat(std::vector<uint8_t> &vec, float value) const
+void goBILDA::Pinpoint::loadBufferWithFloat(uint8_t* buffer, float value) const
 {
-    union {
-        float f;
-        uint8_t b[4];
-    } u;
+    union { float f; uint8_t b[4]; } u;
     u.f = value;
-    vec.clear();
-    vec.push_back(u.b[0]);
-    vec.push_back(u.b[1]);
-    vec.push_back(u.b[2]);
-    vec.push_back(u.b[3]);
+    buffer[0] = u.b[0];
+    buffer[1] = u.b[1];
+    buffer[2] = u.b[2];
+    buffer[3] = u.b[3];
 }
 
-void goBILDA::Pinpoint::loadVectorWithUint(std::vector<uint8_t> &vec, uint32_t value) const
+void goBILDA::Pinpoint::loadBufferWithUint(uint8_t* buffer, uint32_t value) const
 {
-    vec.push_back((value >>  0) & 0xFF);
-    vec.push_back((value >>  8) & 0xFF);
-    vec.push_back((value >> 16) & 0xFF);
-    vec.push_back((value >> 24) & 0xFF);
+    buffer[0] = (value >>  0) & 0xFF;
+    buffer[1] = (value >>  8) & 0xFF;
+    buffer[2] = (value >> 16) & 0xFF;
+    buffer[3] = (value >> 24) & 0xFF;
 }
 
-int32_t goBILDA::Pinpoint::convertVectorToint(std::vector<uint8_t> &vec) const
+int32_t goBILDA::Pinpoint::convertBufferToint(const uint8_t* buffer) const
 {
     int32_t returnVal = 0;
-    returnVal |= vec[3] << 24;
-    returnVal |= vec[2] << 16;
-    returnVal |= vec[1] <<  8;
-    returnVal |= vec[0] <<  0;
+    returnVal |= (uint32_t)buffer[3] << 24;
+    returnVal |= (uint32_t)buffer[2] << 16;
+    returnVal |= (uint32_t)buffer[1] <<  8;
+    returnVal |= (uint32_t)buffer[0] <<  0;
     return returnVal;
 }
 
-uint32_t goBILDA::Pinpoint::convertVectorToUint(std::vector<uint8_t> &vec) const
+uint32_t goBILDA::Pinpoint::convertBufferToUint(const uint8_t* buffer) const
 {
     uint32_t returnVal = 0;
-    returnVal |= vec[3] << 24;
-    returnVal |= vec[2] << 16;
-    returnVal |= vec[1] <<  8;
-    returnVal |= vec[0] <<  0;
+    returnVal |= (uint32_t)buffer[3] << 24;
+    returnVal |= (uint32_t)buffer[2] << 16;
+    returnVal |= (uint32_t)buffer[1] <<  8;
+    returnVal |= (uint32_t)buffer[0] <<  0;
     return returnVal;
 }
 
-float goBILDA::Pinpoint::convertVectorToFloat(std::vector<uint8_t> &vec) const
+float goBILDA::Pinpoint::convertBufferToFloat(const uint8_t* buffer) const
 {
-    union {
-        float f;
-        uint8_t b[4];
-    } u;
-    u.b[3] = vec[3];
-    u.b[2] = vec[2];
-    u.b[1] = vec[1];
-    u.b[0] = vec[0];
+    union { float f; uint8_t b[4]; } u;
+    u.b[3] = buffer[3];
+    u.b[2] = buffer[2];
+    u.b[1] = buffer[1];
+    u.b[0] = buffer[0];
     return u.f;
 }
 
